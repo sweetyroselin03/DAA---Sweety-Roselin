@@ -1,0 +1,50 @@
+from collections import deque
+
+def catMouseGame(graph):
+    n = len(graph)
+    
+    # dp[t][x][y] stores the result of the game when it's Mouse's (if t==1) or Cat's (if t==2) turn,
+    # the Mouse is at position x and the Cat is at position y.
+    dp = [[[0] * n for _ in range(n)] for _ in range(2)]
+
+    # Base cases: Mouse at the hole (node 0) or Cat catches the mouse
+    for i in range(1, n):
+        dp[1][0][i] = 1  # Mouse wins if it's the mouse's turn and the mouse is at the hole
+        dp[2][0][i] = 1  # Mouse wins if it's the cat's turn and the mouse is at the hole
+        dp[1][i][i] = 2  # Cat wins if mouse and cat are at the same position
+        dp[2][i][i] = 2  # Cat wins if mouse and cat are at the same position
+
+    queue = deque()
+
+    # Initialize queue with known results
+    for i in range(1, n):
+        for t in range(1, 3):
+            if dp[t][0][i] == 1:  # Mouse wins
+                queue.append((t, 0, i))
+            elif dp[t][i][i] == 2:  # Cat wins
+                queue.append((t, i, i))
+
+    # Process the queue
+    while queue:
+        turn, mouse, cat = queue.popleft()
+
+        for prevMouse, prevCat, prevTurn in previous_positions(graph, mouse, cat, turn):
+            if dp[prevTurn][prevMouse][prevCat] == 0:
+                if (prevTurn == 1 and dp[turn][mouse][cat] == 2) or (prevTurn == 2 and dp[turn][mouse][cat] == 1):
+                    dp[prevTurn][prevMouse][prevCat] = dp[turn][mouse][cat]
+                    queue.append((prevTurn, prevMouse, prevCat))
+
+    return dp[1][1][2]
+
+def previous_positions(graph, mouse, cat, turn):
+    if turn == 1:  # Cat's previous turn
+        for prevCat in graph[cat]:
+            if prevCat != 0:  # Cat can't go to hole
+                yield mouse, prevCat, 2
+    else:  # Mouse's previous turn
+        for prevMouse in graph[mouse]:
+            yield prevMouse, cat, 1
+
+# Example usage:
+graph = [[2,5],[3],[0,4,5],[1,4,5],[2,3],[0,2,3]]
+print(catMouseGame(graph))
