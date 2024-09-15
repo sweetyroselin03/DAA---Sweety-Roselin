@@ -1,0 +1,13 @@
+from itertools import chain, combinations
+
+def generate_subsets_with_element(s, x):
+    def all_subsets(s):
+        return chain.from_iterable(combinations(s, r) for r in range(len(s) + 1))
+    
+    subsets_with_x = [list(subset) for subset in all_subsets(s) if x in subset]
+    return subsets_with_x
+
+# Example usage
+E = [2, 3, 4, 5]
+x = 3
+print("The subsets containing", x, ":", generate_subsets_with_element(E, x))
