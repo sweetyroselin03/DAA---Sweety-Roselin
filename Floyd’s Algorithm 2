@@ -1,0 +1,37 @@
+import numpy as np
+
+def floyd_warshall(n, edges):
+    dist = np.full((n, n), np.inf)
+    np.fill_diagonal(dist, 0)
+    
+    for u, v, w in edges:
+        dist[u][v] = w
+        dist[v][u] = w
+    
+    print("Initial Distance Matrix:")
+    print(dist)
+    
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                if dist[i][j] > dist[i][k] + dist[k][j]:
+                    dist[i][j] = dist[i][k] + dist[k][j]
+    
+    print("\nDistance Matrix after Floyd-Warshall Algorithm:")
+    print(dist)
+    
+    return dist
+
+def find_shortest_path(dist, start, end):
+    return dist[start][end]
+
+n = 5
+edges = [[0, 1, 2], [0, 4, 8], [1, 2, 3], [1, 4, 2], [2, 3, 1], [3, 4, 1]]
+dist = floyd_warshall(n, edges)
+
+print("\nShortest path from C to A:", find_shortest_path(dist, 2, 0))
+print("Shortest path from E to C:", find_shortest_path(dist, 4, 2))
+print("Shortest path from E to C:", find_shortest_path(dist, 4, 2))
+
+print("Shortest path from C to A in new example:", find_shortest_path(dist, 2, 0))
+print("Shortest path from E to C in new example:", find_shortest_path(dist, 4, 2))
