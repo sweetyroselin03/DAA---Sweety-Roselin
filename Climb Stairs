@@ -1,0 +1,23 @@
+def climbStairs(n):
+    if n == 1:
+        return 1
+    if n == 2:
+        return 2
+    
+    prev1, prev2 = 2, 1
+    for i in range(3, n+1):
+        curr = prev1 + prev2
+        prev2 = prev1
+        prev1 = curr
+    
+    return prev1
+
+# Test case 1
+n1 = 4
+print("Input:", n1)
+print("Output:", climbStairs(n1))  # Output: 5
+
+# Test case 2
+n2 = 3
+print("Input:", n2)
+print("Output:", climbStairs(n2))  # Output: 3
