@@ -1,0 +1,24 @@
+def has_hamiltonian_cycle(n, edges):
+    def backtrack(path):
+        if len(path) == n:
+            return path[0] in adj_list[path[-1]]
+        
+        for neighbor in adj_list[path[-1]]:
+            if neighbor not in path:
+                path.append(neighbor)
+                if backtrack(path):
+                    return True
+                path.pop()
+        return False
+
+    adj_list = {i: set() for i in range(n)}
+    for u, v in edges:
+        adj_list[u].add(v)
+        adj_list[v].add(u)
+
+    return backtrack([0])
+
+# Example usage
+edges = [(0, 1), (1, 2), (2, 3), (3, 0), (0, 2), (2, 4), (4, 0)]
+n = 5
+print("Does the graph have a Hamiltonian cycle?", has_hamiltonian_cycle(n, edges))
