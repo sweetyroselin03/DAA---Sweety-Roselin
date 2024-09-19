@@ -1,0 +1,26 @@
+def permute_unique(nums):
+    result = []
+    nums.sort()  # Sort to handle duplicates
+    
+    def backtrack(start):
+        if start == len(nums):
+            result.append(list(nums))
+            return
+        for i in range(start, len(nums)):
+            if i > start and nums[i] == nums[i - 1]:
+                continue  # Skip duplicates
+            nums[start], nums[i] = nums[i], nums[start]  # Swap
+            backtrack(start + 1)
+            nums[start], nums[i] = nums[i], nums[start]  # Swap back
+    
+    backtrack(0)
+    return result
+
+# Example input
+nums = [1, 1, 2]
+
+# Find unique permutations
+unique_permutations = permute_unique(nums)
+
+# Output the result
+print(unique_permutations)
